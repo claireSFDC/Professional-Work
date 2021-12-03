@@ -1,0 +1,25 @@
+<template>
+    <lightning-card title = "Service Territory Membership" icon-name="standard:service_crew">
+        <lightning-button label="Refresh" slot="actions" icon-name="utility:refresh" onclick={refreshList}></lightning-button>
+        <template if:true={membersList}>
+            <div style="height : 300px;">
+                <lightning-datatable
+                    key-field="serviceTerritoryMemberId"
+                    data={membersList}
+                    columns={columns}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </div>
+        </template>
+        <template if:true={errorMessage}>
+            <p>{errorMessage}</p>
+        </template>
+        <div class="c-container">
+            <lightning-layout horizontal-align='space' class="slds-p-vertical_small">
+                <lightning-layout-item><lightning-icon icon-name="action:approval" size="xx-small"></lightning-icon> Valid</lightning-layout-item>
+                <lightning-layout-item><lightning-icon icon-name="action:priority" size="xx-small"></lightning-icon>Extra</lightning-layout-item> 
+                <lightning-layout-item><lightning-icon icon-name="action:close" size="xx-small"></lightning-icon>Missing</lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>
