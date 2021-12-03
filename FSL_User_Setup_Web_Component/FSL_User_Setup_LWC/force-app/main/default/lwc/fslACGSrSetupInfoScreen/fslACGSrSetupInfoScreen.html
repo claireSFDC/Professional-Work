@@ -1,0 +1,373 @@
+<template>
+    <div class="slds-p-around_x-small">
+
+        <template if:true={infoNotComplete}>
+            <p style="color:red;">Info is not complete. Please enter all required information.</p>
+        </template>
+
+        <div class="slds-text-heading_small slds-p-bottom_small">
+            &#9733; Use the <b>Search for user by name</b> component to find and select an existing user.
+        </div>
+        <div class="slds-border_bottom">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="usersearch">Search for user by name</label>
+                <div class="slds-form-element__control">
+                    <div class="slds-combobox_container slds-has-inline-listbox">
+                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+
+                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                <template if:true={selectedPersonUser}>
+                                    <div class="slds-pill-container">
+                                        <lightning-pill label={selectedPersonUser.Name} onremove={handleRemovePerson}>
+                                            <lightning-icon icon-name="standard:employee_job_position" variant="circle" alternative-text="person"></lightning-icon>
+                                        </lightning-pill>
+                                    </div>
+                                </template>
+                                <template if:false={selectedPersonUser}>
+                                    <lightning-input 
+                                        name='fullname' 
+                                        type="search" 
+                                        onchange={handleFullNameChange}
+                                        class="slds-input slds-combobox__input"
+                                        id="usersearch"
+                                        variant="label-hidden">
+                                    </lightning-input>
+                                </template>
+                            </div>
+
+                            <template if:true={showPeople}>
+
+                                <div class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                        <template for:each={peopleFromSearch} for:item="person">
+                                                <li role="presentation" class="slds-listbox__item" key={person.userId} onclick={handleSelectPerson} data-userid={person.userId}>
+                                                    
+                                                    <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-listbox__option_has-meta" role="option">
+                                                        <span class="slds-media__figure slds-listbox__option-icon">
+                                                            <span class="slds-icon_container slds-icon-utility-anchor slds-current-color">
+                                                                <lightning-icon icon-name="standard:employee_job_position" alternative-text="Person" title="Person" size="small">
+                                                                </lightning-icon>
+                                                            </span>
+                                                        </span>
+                                                        <span class="slds-media__body">
+                                                        <span class="slds-truncate" title="Full Name">{person.fullname}</span>
+                                                        <span class="slds-listbox__option-meta">{person.facilityName} * {person.status}</span>
+                                                        </span>
+                                                    </div>
+
+                                                </li>
+                                        </template>
+                                    </ul>
+                                </div>
+
+                            </template>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <lightning-layout>
+                <lightning-layout-item size="6" padding="around-small">
+                    <template if:false={selectedPersonUser}>
+                        <lightning-combobox
+                            name="userstatus"
+                            label="User Status"
+                            value={status}
+                            placeholder="User Status"
+                            options={statusOptions}
+                            read-only>
+                        </lightning-combobox>
+                    </template>
+                    <template if:true={selectedPersonUser}>
+                        <lightning-combobox
+                            name="userstatuss"
+                            labeuserstatussl="User Status"
+                            value={status}
+                            placeholder="User Status"
+                            options={statusOptions}
+                            onchange={handleInfoChange}>
+                        </lightning-combobox>
+                    </template>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-small">
+                    <lightning-input 
+                        name='setupStatus' 
+                        label="Setup Status" 
+                        value={setupStatus}
+                        type="text" 
+                        read-only>
+                    </lightning-input>
+                </lightning-layout-item>
+            </lightning-layout>
+            <div class="slds-p-bottom_small">
+                <template if:true={statusChangeWarning}>
+                    <p style="color:red;">{statusChangeWarning}</p>
+                </template>
+            </div>
+        </div>
+
+        <div class="slds-text-heading_small slds-p-top_small">
+            <h1>&#9733; Use the fields below to create a new user, or to update an existing user as selected above.</h1>
+        </div>
+        <div class="slds-form-element slds-p-top_small">
+            <label class="slds-form-element__label" for="facilitysearch">Enter facility</label>
+            <lightning-helptext content = "To see the account here, it must have a Service Territory, ST Operating Hours, Facility ID, and the owner must have the role Field Representative."></lightning-helptext>
+            <div class="slds-form-element__control">
+                <div class="slds-combobox_container slds-has-inline-listbox">
+                    <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+
+                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                            <template if:true={FacilityIsSet}>
+                                <div class="slds-media slds-media_small slds-media_center slds-media_large">
+                                    <div class="slds-media__figure">
+                                        <lightning-icon icon-name="standard:account" size="medium"></lightning-icon>
+                                    </div>
+                                    <div class="slds-media__body">{facilityName}</div>
+                                </div>
+                            </template>
+                            <template if:false={FacilityIsSet}>
+                                <template if:true={selectedFacility}>
+                                    <div class="slds-pill-container">
+                                        <lightning-pill label={selectedFacility.Name} onremove={handleRemoveFacility}>
+                                            <lightning-icon icon-name="standard:account" variant="circle" alternative-text="facility"></lightning-icon>
+                                        </lightning-pill>
+                                    </div>
+                                </template>
+                                <template if:false={selectedFacility}>
+                                    <lightning-input 
+                                        name='facilityname' 
+                                        type="search"
+                                        value={facilityName}
+                                        onchange={handleFacilityNameChange}
+                                        class="slds-input slds-combobox__input"
+                                        id="facilitysearch"
+                                        variant="label-hidden">
+                                    </lightning-input>
+                                </template>
+                            </template>
+
+                        </div>
+
+                        <template if:true={showFacilities}>
+                            <div class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+                                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                    <template for:each={facilities} for:item="facility">
+                                            <li role="presentation" class="slds-listbox__item" key={facility.Id} onclick={handleSelectFacility} data-facilityid={facility.Id}>
+                                                
+                                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-listbox__option_has-meta slds-media_center" role="option">
+                                                    <span class="slds-media__figure slds-listbox__option-icon">
+                                                    <span class="slds-icon_container slds-icon-utility-anchor slds-current-color">
+                                                        <lightning-icon icon-name="standard:account" alternative-text="facility" title="Facility" size="small">
+                                                        </lightning-icon>
+                                                    </span>
+                                                    </span>
+                                                    <span class="slds-media__body">
+                                                    <span class="slds-truncate" title="facility">{facility.Name}</span>
+                                                    </span>
+                                                </div>
+
+                                            </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </template>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <lightning-input 
+                    name='firstname' 
+                    label="First Name"
+                    value={firstname}
+                    type="text" 
+                    onchange={handleInfoChange}
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" padding="around-small">
+                <lightning-input 
+                    name='lastname' 
+                    label="Last Name"
+                    value={lastname}
+                    type="text" 
+                    onchange={handleInfoChange}
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <lightning-combobox
+                    name="typeofuser"
+                    label="Type of User"
+                    value={typeofuser}
+                    placeholder="Select Type of User"
+                    options={typeofuserOptions}
+                    onchange={handleInfoChange}
+                    required >
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" padding="around-small">
+                <lightning-input 
+                    name='drivernumber' 
+                    label="Driver Number" 
+                    value={driverNumber}
+                    type="number" 
+                    onchange={handleInfoChange}
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <template if:true={isHybrid}>
+            <template if:false={isFleet}>
+                <lightning-input
+                    name="isowner"
+                    type="checkbox"
+                    label="This resource is the Owner of this Service Provider"
+                    value={selectedPersonIsOwner}
+                    onchange={handleInfoChange}>
+                </lightning-input>
+            </template>
+        </template>
+
+        <template if:true={emailisInvalid}>
+            <p style="color:red;">The email address you entered is invalid. Please enter a valid email address.</p>
+        </template>
+        <template if:true={emailIsTaken}>
+            <p style="color:red;">The email address you entered is already assigned to another user. Please enter a unique email address.</p>
+        </template>
+        <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <template if:true={selectedPersonUser}>
+                    <lightning-input 
+                        name='emailaddress' 
+                        label="Email Address"
+                        value={emailaddress} 
+                        type="email" 
+                        onchange={handleInfoChange}
+                        read-only
+                        required
+                        field-level-help="To update email address, go to the user record in Setup">
+                    </lightning-input>
+                </template>
+                <template if:false={selectedPersonUser}>
+                    <lightning-input 
+                        name='emailaddress' 
+                        label="Email Address"
+                        value={emailaddress} 
+                        type="email" 
+                        onchange={handleInfoChange}
+                        required
+                        field-level-help="To update email address, go to the user record in Setup">
+                    </lightning-input>
+                </template>
+
+            </lightning-layout-item>
+            <lightning-layout-item size = "6" padding="around-small">
+                <lightning-input 
+                    name='phone' 
+                    label="Phone Number"
+                    value={phone}
+                    type="tel" 
+                    onchange={handleInfoChange}>
+                </lightning-input>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <lightning-input 
+                    name='startdate' 
+                    label="Start Date"
+                    type="datetime"
+                    value={startdate}
+                    onchange={handleInfoChange}
+                    timezone={timeZone}
+                    field-level-help="Enter the Start Date/Time in the Time Zone of the new user."
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" padding="around-small">
+                <template if:true={selectedPersonUser}>
+                    <lightning-input 
+                        name='employeenumber' 
+                        label="Employee Number" 
+                        value={employeeNumber}
+                        type="text" 
+                        onchange={handleInfoChange}
+                        field-level-help="SAML ID for Fleet, HireRight # for providers"
+                        required
+                        read-only>
+                    </lightning-input>
+                </template>
+                <template if:false={selectedPersonUser}>
+                    <lightning-input 
+                        name='employeenumber' 
+                        label="Employee Number" 
+                        value={employeeNumber}
+                        type="text" 
+                        onchange={handleInfoChange}
+                        field-level-help="SAML ID for Fleet, HireRight # for providers"
+                        required>
+                    </lightning-input>
+                </template>
+
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <lightning-checkbox-group name="Skills Group"
+            label="Service Resource Skills"
+            options={skillsOptions}
+            value={selectedSkills}
+            onchange={handleInfoChange}>
+        </lightning-checkbox-group>
+
+
+        <template if:true={isFleet}>
+            <lightning-input-address
+                name="addressT"
+                address-label="Address"
+                street-label="Street"
+                city-label="City"
+                country-label="Country"
+                province-label="State"
+                postal-code-label="Postal Code"
+                street={street}
+                city={city}
+                country={country}
+                province={state}
+                postal-code={postal}
+                onchange={handleInfoChange}
+                field-level-help="Default value is provider address">
+            </lightning-input-address>
+        </template>
+        <template if:false={isFleet}>
+            <lightning-input-address
+                name="address"
+                address-label="Address"
+                street-label="Street"
+                city-label="City"
+                country-label="Country"
+                province-label="State"
+                postal-code-label="Postal Code"
+                street={street}
+                city={city}
+                country={country}
+                province={state}
+                postal-code={postal}
+                field-level-help="Default value is provider address"
+                onchange={handleInfoChange}>
+            </lightning-input-address>
+        </template>
+    </div>
+
+</template>

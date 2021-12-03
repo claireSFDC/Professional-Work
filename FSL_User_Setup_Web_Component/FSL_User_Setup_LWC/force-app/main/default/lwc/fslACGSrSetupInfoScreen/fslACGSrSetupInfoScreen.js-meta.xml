@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="firstname" type="String" label="First Name"/>
+            <property name="lastname" type="String" label="Last Name"/>
+            <property name="emailaddress" type="String" label="Email Address"/>
+            <property name="phone" type="String" label="Phone Number"/>
+            <property name="startdate" type="DateTime" label="Start Date"/>
+            <property name="driverNumber" type="String" label="Driver Number"/>
+            <property name="typeofuser" type="String" label="Type Of Resource"/>
+            <property name="street" type="String" label="Street"/>
+            <property name="city" type="String" label="City"/>
+            <property name="state" type="String" label="State"/>
+            <property name="postal" type="String" label="Postal"/>
+            <property name="country" type="String" label="Country"/>
+            <property name="fleetOrPartnerFlow" type="String" label="Fleet Or Partner"/>
+            <property name="selectedFacility" type="@salesforce/schema/Account" label="Account"/>
+            <property name="selectedPersonUser" type="@salesforce/schema/User" label="User"/>
+            <property name="selectedPersonServiceTerritory" type="@salesforce/schema/ServiceTerritory" label="Service Territory"/>
+            <property name="selectedPersonServiceResource" type="@salesforce/schema/ServiceResource" label="Service Resource"/>
+            <property name="actionFlow" type="String" label="Action"/>
+            <property name="selectedPersonIsOwner" type="Boolean" label="Is Owner"/>
+            <property name="emailisInvalid" type="Boolean" label="Is Email Valid"/>
+            <property name="ServiceTerritoryId" type="String" label="Service Territory ID"/>
+            <property name="infoNotComplete" type="Boolean" label="Info Not Complete"/>
+            <property name="emailIsTaken" type="Boolean" label="Email Is Taken"/>
+            <property name="employeeNumber" type="String" label="Employee Number"/>
+            <property name="selectedSkillsString" type="String" label="Selected Skills"/>
+
+
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
